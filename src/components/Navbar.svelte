@@ -1,6 +1,17 @@
-<!---
-Create a variable named isLoggedIn that will be set to true or false.  Then use it to create an if statement in the Svelte template that shows logged navigation if isLoggedIn is true or non-logged-in navigation if isLoggedIn is false.
--->
+<script>
+	import { page } from '$app/state';
+
+	let isLoggedIn = $state(true);
+	let isOpen = $state(true);
+
+	function toggleNavbar() {
+		isOpen = !isOpen;
+	}
+</script>
+
+<svelte:head>
+	<title>Book Lover</title>
+</svelte:head>
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
 	<div class="container-fluid">
@@ -13,40 +24,61 @@ Create a variable named isLoggedIn that will be set to true or false.  Then use 
 			aria-controls="navbarNav"
 			aria-expanded="false"
 			aria-label="Toggle navigation"
+			onclick={toggleNavbar}
 		>
 			<span class="navbar-toggler-icon"></span>
 		</button>
-		<div class="collapse navbar-collapse" id="navbarNav">
+		<div class:show={isOpen} class="collapse navbar-collapse" id="navbarNav">
 			<ul class="navbar-nav">
-				<li class="nav-item">
-					<a class="nav-link" aria-current="page" href="/">Home</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="/add">Add Book</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="/profile">Profile</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="/about">About</a>
-				</li>
-				<li class="nav-item">
-					<span class="nav-link">Logout</span>
-				</li>
-				<!-- Not Logged In -->
-				<li class="nav-item">
-					<a class="nav-link" aria-current="page" href="/">Home</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="/about">About</a>
-				</li>
+				{#if isLoggedIn}
+					<li class="nav-item">
+						<a
+							class="nav-link"
+							class:active={page.url.pathname === '/'}
+							aria-current="page"
+							href="/">Home</a
+						>
+					</li>
+					<li class="nav-item">
+						<a class:active={page.url.pathname === '/add'} class="nav-link" href="/add">Add Book</a>
+					</li>
+					<li class="nav-item">
+						<a class:active={page.url.pathname === '/profile'} class="nav-link" href="/profile"
+							>Profile</a
+						>
+					</li>
+					<li class="nav-item">
+						<a class:active={page.url.pathname === '/about'} class="nav-link" href="/about">About</a
+						>
+					</li>
+					<li class="nav-item">
+						<span class="nav-link">Logout</span>
+					</li>
+				{:else}
+					<!-- Not Logged In -->
+					<li class="nav-item">
+						<a
+							class="nav-link"
+							class:active={page.url.pathname === '/'}
+							aria-current="page"
+							href="/">Home</a
+						>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" class:active={page.url.pathname === '/about'} href="/about">About</a
+						>
+					</li>
 
-				<li class="nav-item">
-					<a class="nav-link" href="/login">Login</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="/signup">Sign Up</a>
-				</li>
+					<li class="nav-item">
+						<a class="nav-link" class:active={page.url.pathname === '/login'} href="/login">Login</a
+						>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" class:active={page.url.pathname === '/signup'} href="/signup"
+							>Sign Up</a
+						>
+					</li>
+				{/if}
 			</ul>
 		</div>
 	</div>
