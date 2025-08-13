@@ -4,6 +4,7 @@
 	import Navbar from '../components/Navbar.svelte';
 	import Alert from '../components/ui/Alert.svelte';
 	import messageStore from '../storage/message.store';
+	import '$lib/firebase/firebase.client';
 
 	let { children } = $props();
 </script>
