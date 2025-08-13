@@ -1,8 +1,8 @@
 <script>
 	import { page } from '$app/state';
 
-	let isLoggedIn = $state(true);
-	let isOpen = $state(true);
+	let isLoggedIn = $state(false);
+	let isOpen = $state(false);
 
 	function toggleNavbar() {
 		isOpen = !isOpen;
