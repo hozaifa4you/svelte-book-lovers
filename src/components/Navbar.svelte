@@ -1,11 +1,19 @@
 <script>
+	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
+	import { signout } from '$lib/firebase/auth.client';
 	import authStore from '../storage/auth.store';
 
 	let isOpen = $state(false);
 
 	function toggleNavbar() {
 		isOpen = !isOpen;
+	}
+
+	async function handleLogout() {
+		await signout();
+
+		goto('/');
 	}
 </script>
 
@@ -52,7 +60,7 @@
 						>
 					</li>
 					<li class="nav-item">
-						<span class="nav-link">Logout</span>
+						<button onclick={handleLogout} class="nav-link">Logout</button>
 					</li>
 				{:else}
 					<!-- Not Logged In -->
@@ -83,9 +91,3 @@
 		</div>
 	</div>
 </nav>
-
-<style>
-	.nav-item > span {
-		cursor: pointer;
-	}
-</style>
