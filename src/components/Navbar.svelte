@@ -1,7 +1,7 @@
 <script>
 	import { page } from '$app/state';
+	import authStore from '../storage/auth.store';
 
-	let isLoggedIn = $state(false);
 	let isOpen = $state(false);
 
 	function toggleNavbar() {
@@ -30,7 +30,7 @@
 		</button>
 		<div class:show={isOpen} class="collapse navbar-collapse" id="navbarNav">
 			<ul class="navbar-nav">
-				{#if isLoggedIn}
+				{#if $authStore.isLoggedIn}
 					<li class="nav-item">
 						<a
 							class="nav-link"
