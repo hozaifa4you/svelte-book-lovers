@@ -1,26 +1,27 @@
 <script>
 	// @ts-nocheck
-	import { signinWithEmail } from '$lib/firebase/auth.client';
-	import LoginWithGoogle from '../../components/Auth/LoginWithGoogle.svelte';
+	import { sendResetPasswordEmail } from '$lib/firebase/auth.client';
 	import messageStore from '../../storage/message.store';
 
 	/**
 	 * @param {SubmitEvent & { currentTarget: EventTarget & HTMLFormElement; }} event
 	 */
-	async function handleLogin(event) {
+	async function handleReset(event) {
 		const formData = new FormData(event.currentTarget);
 		const email = formData.get('email');
-		const password = formData.get('password');
 
-		if (!email || !password) {
-			messageStore.showError('Email & Password is required');
+		if (!email) {
+			messageStore.showError('Email is required');
 			return;
 		}
 
 		try {
-			// @ts-ignore
-			const user = await signinWithEmail(email, password);
+			await sendResetPasswordEmail(email);
+
+			messageStore.showSuccess('Password reset email sent successfully');
 		} catch (error) {
+			console.log(error);
+
 			if (error.code === 'auth/invalid-credential') {
 				messageStore.showError('Invalid credentials');
 			} else {
@@ -32,15 +33,14 @@
 </script>
 
 <svelte:head>
-	<title>Login - Book Lovers</title>
+	<title>Password Reset - Book Lovers</title>
 </svelte:head>
 
 <div class="row mt-5 justify-content-center">
 	<div class="col-md-6">
-		<h1>Login</h1>
+		<h1>Forgot Password</h1>
 		<hr />
-		<LoginWithGoogle />
-		<form on:submit|preventDefault={handleLogin}>
+		<form on:submit|preventDefault={handleReset}>
 			<div class="mb-3">
 				<label for="email" class="form-label">Email</label>
 				<input
@@ -52,20 +52,8 @@
 					required
 				/>
 			</div>
-			<div class="mb-3">
-				<label for="password" class="form-label">Password</label>
-				<input
-					type="password"
-					name="password"
-					class="form-control"
-					id="password"
-					placeholder="*********"
-				/>
-			</div>
 
-			<a href="/forgot-password">Forgot Password? </a>
-
-			<button type="submit" class="btn btn-success w-100">Login</button>
+			<button type="submit" class="btn btn-success w-100">Send Email</button>
 		</form>
 	</div>
 </div>

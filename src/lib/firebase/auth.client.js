@@ -4,7 +4,8 @@ import {
 	signInWithPopup,
 	signOut,
 	createUserWithEmailAndPassword,
-	signInWithEmailAndPassword
+	signInWithEmailAndPassword,
+	sendPasswordResetEmail
 } from 'firebase/auth';
 
 export async function loginWithGoogle() {
@@ -37,4 +38,11 @@ export async function signinWithEmail(email, password) {
 	const auth = getAuth();
 	const userCredentials = await signInWithEmailAndPassword(auth, email, password);
 	return userCredentials.user;
+}
+
+/**
+ * @param {string} email
+ */
+export async function sendResetPasswordEmail(email) {
+	await sendPasswordResetEmail(getAuth(), email);
 }
