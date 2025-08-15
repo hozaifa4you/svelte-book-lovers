@@ -1,8 +1,10 @@
 <script>
 	// @ts-nocheck
 	import { signinWithEmail } from '$lib/firebase/auth.client';
+	import { afterLogin } from '$lib/helpers/route.helper';
 	import LoginWithGoogle from '../../components/Auth/LoginWithGoogle.svelte';
 	import messageStore from '../../storage/message.store';
+	import { page } from '$app/state';
 
 	/**
 	 * @param {SubmitEvent & { currentTarget: EventTarget & HTMLFormElement; }} event
@@ -20,6 +22,7 @@
 		try {
 			// @ts-ignore
 			const user = await signinWithEmail(email, password);
+			await afterLogin(page.url);
 		} catch (error) {
 			if (error.code === 'auth/invalid-credential') {
 				messageStore.showError('Invalid credentials');

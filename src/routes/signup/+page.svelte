@@ -3,6 +3,7 @@
 	import { registerWithEmail } from '$lib/firebase/auth.client';
 	import LoginWithGoogle from '../../components/Auth/LoginWithGoogle.svelte';
 	import messageStore from '../../storage/message.store';
+	import { page } from '$app/state';
 
 	/**
 	 * @param {SubmitEvent & { currentTarget: EventTarget & HTMLFormElement; }} event
@@ -20,7 +21,9 @@
 
 		try {
 			// @ts-ignore
-			const user = await registerWithEmail(email, password);
+			await registerWithEmail(email, password);
+
+			await afterLogin(page.url);
 		} catch (error) {
 			if (error.code === 'auth/email-already-in-use') {
 				messageStore.showError('Email is already in use');
