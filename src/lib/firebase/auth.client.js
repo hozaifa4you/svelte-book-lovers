@@ -46,3 +46,17 @@ export async function signinWithEmail(email, password) {
 export async function sendResetPasswordEmail(email) {
 	await sendPasswordResetEmail(getAuth(), email);
 }
+
+export async function sendJWTToken() {
+	const auth = getAuth();
+	const user = auth.currentUser;
+
+	if (!user) return;
+
+	const token = await user.getIdToken(true);
+	await fetch('/api/token', {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({ token, email: user.email })
+	});
+}

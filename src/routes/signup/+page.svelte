@@ -21,9 +21,9 @@
 
 		try {
 			// @ts-ignore
-			await registerWithEmail(email, password);
+			const user = await registerWithEmail(email, password);
 
-			await afterLogin(page.url);
+			await afterLogin(page.url, user.uid);
 		} catch (error) {
 			if (error.code === 'auth/email-already-in-use') {
 				messageStore.showError('Email is already in use');

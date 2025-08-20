@@ -22,7 +22,7 @@
 		try {
 			// @ts-ignore
 			const user = await signinWithEmail(email, password);
-			await afterLogin(page.url);
+			await afterLogin(page.url, user.uid);
 		} catch (error) {
 			if (error.code === 'auth/invalid-credential') {
 				messageStore.showError('Invalid credentials');
