@@ -18,6 +18,7 @@ export async function loginWithGoogle() {
 
 export async function signout() {
 	await signOut(getAuth());
+	await fetch('/api/logout', { method: 'GET', headers: { 'Content-Type': 'application/json' } });
 }
 
 /**
