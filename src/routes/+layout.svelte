@@ -5,8 +5,41 @@
 	import Alert from '../components/ui/Alert.svelte';
 	import messageStore from '../storage/message.store';
 	import '$lib/firebase/firebase.client';
+	import { onMount } from 'svelte';
+	import { sendJWTToken } from '$lib/firebase/auth.client';
+
+	/**
+	 * @type {string | number | NodeJS.Timeout | undefined}
+	 */
+	let interval;
 
 	let { children } = $props();
+
+	async function sendServerToken() {
+		try {
+			await sendJWTToken();
+		} catch (error) {
+			console.log(error);
+			clearInterval(interval);
+			messageStore.showError();
+		}
+	}
+
+	onMount(() => {
+		async function initializeAuth() {
+			try {
+				await sendServerToken();
+				interval = setInterval(sendServerToken, 60 * 1000 * 10);
+			} catch (error) {
+				console.log(error);
+				messageStore.showError();
+			}
+		}
+
+		initializeAuth();
+
+		return () => clearInterval(interval);
+	});
 </script>
 
 <svelte:head>
