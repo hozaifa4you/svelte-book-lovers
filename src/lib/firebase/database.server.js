@@ -1,4 +1,4 @@
-import { firestore } from 'firebase-admin';
+import admin from 'firebase-admin';
 import { db } from './firebase.server';
 import { saveFileToBucket } from './firestorage.server';
 
@@ -15,7 +15,7 @@ export async function addBook(data, userId) {
 		description: data.description,
 		user_id: userId,
 		likes: 0,
-		created_at: firestore.Timestamp.now().seconds
+		created_at: admin.firestore.Timestamp.now().seconds
 	});
 
 	const small_picture_url = await saveFileToBucket(data.small_picture, 'books/small_pictures');
