@@ -10,6 +10,11 @@ export const actions = {
 			return fail(422, { errors: validated.errors });
 		}
 
+		// @ts-ignore
+		delete validated?.data?.main_picture;
+		// @ts-ignore
+		delete validated?.data?.small_picture;
+
 		return { success: true, data: validated.data };
 	}
 };

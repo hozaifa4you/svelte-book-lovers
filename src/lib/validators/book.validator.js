@@ -66,8 +66,6 @@ export async function addBookValidator(fromData) {
 		const validatedData = await schema.validate(data, { abortEarly: false });
 		return { success: true, data: validatedData };
 	} catch (error) {
-		console.log('error: ', error);
-
 		if (error instanceof yup.ValidationError) {
 			return {
 				success: false,
