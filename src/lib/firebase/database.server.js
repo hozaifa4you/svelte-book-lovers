@@ -18,8 +18,14 @@ export async function addBook(data, userId) {
 		created_at: admin.firestore.Timestamp.now().seconds
 	});
 
-	const small_picture_url = await saveFileToBucket(data.small_picture, 'books/small_pictures');
-	const main_picture_url = await saveFileToBucket(data.main_picture, 'books/main_pictures');
+	const small_picture_url = await saveFileToBucket(
+		data.small_picture,
+		`books/${bookRef.id}/small_pictures`
+	);
+	const main_picture_url = await saveFileToBucket(
+		data.main_picture,
+		`books/${bookRef.id}/main_pictures`
+	);
 
 	await bookRef.update({
 		main_picture: main_picture_url,
