@@ -34,3 +34,17 @@ export async function addBook(data, userId) {
 
 	return bookRef.id;
 }
+
+/**
+ * @param {string} bookId
+ */
+export async function getBook(bookId) {
+	const book = await db.collection('books').doc(bookId).get();
+
+	const data = book.data();
+	if (book.exists) {
+		return { id: book.id, ...book.data() };
+	}
+
+	return null;
+}

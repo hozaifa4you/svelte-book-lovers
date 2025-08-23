@@ -48,7 +48,9 @@
 						>
 					</li>
 					<li class="nav-item">
-						<a class:active={page.url.pathname === '/add'} class="nav-link" href="/add">Add Book</a>
+						<a class:active={page.url.pathname === '/books/add'} class="nav-link" href="/books/add"
+							>Add Book</a
+						>
 					</li>
 					<li class="nav-item">
 						<a class:active={page.url.pathname === '/profile'} class="nav-link" href="/profile"
