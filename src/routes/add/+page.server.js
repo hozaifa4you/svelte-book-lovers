@@ -1,5 +1,6 @@
+import { addBook } from '$lib/firebase/database.server.js';
 import { addBookValidator } from '$lib/validators/book.validator.js';
-import { fail } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 
 export const actions = {
 	default: async ({ request, locals }) => {
@@ -7,14 +8,19 @@ export const actions = {
 
 		const validated = await addBookValidator(formData);
 		if (!validated.success) {
-			return fail(422, { errors: validated.errors });
+			const data = validated.data;
+
+			// @ts-ignore
+			delete data?.small_picture;
+			// @ts-ignore
+			delete data?.main_picture;
+
+			return fail(422, { errors: validated.errors, data: validated.data });
 		}
 
 		// @ts-ignore
-		delete validated?.data?.main_picture;
-		// @ts-ignore
-		delete validated?.data?.small_picture;
+		const bookId = await addBook(validated.data, locals.user.id);
 
-		return { success: true, data: validated.data };
+		throw redirect(303, `/books/${bookId}`);
 	}
 };

@@ -5,6 +5,7 @@
       "name": "blog-app",
       "dependencies": {
         "firebase": "^12.1.0",
+        "uuid": "^11.1.0",
       },
       "devDependencies": {
         "@eslint/compat": "^1.2.5",
