@@ -20,8 +20,6 @@
 
 			messageStore.showSuccess('Password reset email sent successfully');
 		} catch (error) {
-			console.log(error);
-
 			if (error.code === 'auth/invalid-credential') {
 				messageStore.showError('Invalid credentials');
 			} else {

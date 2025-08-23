@@ -7,9 +7,14 @@ export async function POST({ cookies, request }) {
 
 		const verifiedToken = await auth.verifyIdToken(token ?? '', true);
 		if (verifiedToken.email === email) {
+			const expiresIn = verifiedToken.exp - Math.floor(Date.now() / 1000);
+
 			cookies.set('jwt', token, {
-				maxAge: verifiedToken.exp - Date.now() / 1000,
-				path: '/'
+				maxAge: expiresIn,
+				path: '/',
+				httpOnly: true,
+				secure: false, // Set to true in production with HTTPS
+				sameSite: 'lax'
 			});
 
 			return json({ message: 'Success' }, { status: 200 });
@@ -17,8 +22,7 @@ export async function POST({ cookies, request }) {
 
 		return json({ message: 'Access denied' }, { status: 403 });
 	} catch (error) {
-		// @ts-ignore
-		console.log(error.message);
+		console.log('Token API - Error:', error instanceof Error ? error.message : String(error));
 		return json({ message: 'Access denied' }, { status: 403 });
 	}
 }

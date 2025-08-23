@@ -18,7 +18,10 @@ export const actions = {
 			return fail(422, { errors: validated.errors, data: validated.data });
 		}
 
-		// @ts-ignore
+		if (!locals.user) {
+			throw redirect(302, '/login');
+		}
+
 		const bookId = await addBook(validated.data, locals.user.id);
 
 		throw redirect(303, `/books/${bookId}`);
