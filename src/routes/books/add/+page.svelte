@@ -1,4 +1,6 @@
 <script>
+	import { enhance } from '$app/forms';
+
 	const { form } = $props();
 </script>
 
@@ -12,7 +14,7 @@
 			<h1>Add new book</h1>
 			<hr />
 
-			<form enctype="multipart/form-data" method="POST">
+			<form use:enhance enctype="multipart/form-data" method="POST">
 				<div class="mb-3">
 					<label for="title" class="form-label">Book Title</label>
 					<input

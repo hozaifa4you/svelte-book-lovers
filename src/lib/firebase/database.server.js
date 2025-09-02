@@ -1,4 +1,4 @@
-import admin from 'firebase-admin';
+import admin, { firestore } from 'firebase-admin';
 import { db } from './firebase.server';
 import { saveFileToBucket } from './firestorage.server';
 
@@ -81,4 +81,36 @@ export async function editBook(id, userId, form) {
 
 		await bookRef.update({ small_picture: small_picture_url });
 	}
+}
+
+/**
+ *
+ * @param {string} bookId
+ * @param {string} userId
+ */
+export async function toggleLike(bookId, userId) {
+	const bookDoc = db.collection('books').doc(bookId);
+	const userDoc = db.collection('users').doc(userId);
+	const user = await userDoc.get();
+	const userData = user.data();
+
+	if (userData?.bookIds && userData.booIds.include(bookId)) {
+		await userDoc.update({
+			bookIds: firestore.FieldValue.arrayRemove(bookId)
+		});
+
+		await bookDoc.update({
+			likes: firestore.FieldValue.increment(-1)
+		});
+	} else {
+		await userDoc.update({
+			bookIds: firestore.FieldValue.arrayUnion(bookId)
+		});
+
+		await bookDoc.update({
+			likes: firestore.FieldValue.increment(1)
+		});
+	}
+
+	return await getBook(bookId);
 }
