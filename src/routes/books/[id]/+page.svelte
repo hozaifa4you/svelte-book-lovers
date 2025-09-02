@@ -28,6 +28,10 @@
 	</div>
 </div>
 
+<div>
+	<a class="btn btn-primary" href={`/books/${data.book.id}/edit`}>Edit</a>
+</div>
+
 <style>
 	.main-image {
 		max-height: 300px;

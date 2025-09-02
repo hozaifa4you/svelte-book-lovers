@@ -41,10 +41,44 @@ export async function addBook(data, userId) {
 export async function getBook(bookId) {
 	const book = await db.collection('books').doc(bookId).get();
 
-	const data = book.data();
 	if (book.exists) {
 		return { id: book.id, ...book.data() };
 	}
 
 	return null;
+}
+
+/**
+ *
+ * @param {*} id
+ * @param {*} userId
+ * @param {*} form
+ */
+export async function editBook(id, userId, form) {
+	const bookRef = await db.collection('books').doc(id);
+	const main_picture = form.main_picture;
+	const small_picture = form.small_picture;
+
+	delete form.small_picture;
+	delete form.main_picture;
+
+	await bookRef.update(form);
+
+	if (main_picture) {
+		const main_picture_url = await saveFileToBucket(
+			main_picture,
+			`books/${bookRef.id}/main_pictures`
+		);
+
+		await bookRef.update({ main_picture: main_picture_url });
+	}
+
+	if (small_picture) {
+		const small_picture_url = await saveFileToBucket(
+			small_picture,
+			`books/${bookRef.id}/small_pictures`
+		);
+
+		await bookRef.update({ small_picture: small_picture_url });
+	}
 }
