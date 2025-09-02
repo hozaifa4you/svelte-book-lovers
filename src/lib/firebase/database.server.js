@@ -1,4 +1,4 @@
-import admin, { firestore } from 'firebase-admin';
+import admin from 'firebase-admin';
 import { db } from './firebase.server';
 import { saveFileToBucket } from './firestorage.server';
 
@@ -94,21 +94,21 @@ export async function toggleLike(bookId, userId) {
 	const user = await userDoc.get();
 	const userData = user.data();
 
-	if (userData?.bookIds && userData.booIds.include(bookId)) {
+	if (userData?.bookIds && userData.booIds?.include(bookId)) {
 		await userDoc.update({
-			bookIds: firestore.FieldValue.arrayRemove(bookId)
+			bookIds: admin.firestore.FieldValue.arrayRemove(bookId)
 		});
 
 		await bookDoc.update({
-			likes: firestore.FieldValue.increment(-1)
+			likes: admin.firestore.FieldValue.increment(-1)
 		});
 	} else {
 		await userDoc.update({
-			bookIds: firestore.FieldValue.arrayUnion(bookId)
+			bookIds: admin.firestore.FieldValue.arrayUnion(bookId)
 		});
 
 		await bookDoc.update({
-			likes: firestore.FieldValue.increment(1)
+			likes: admin.firestore.FieldValue.increment(1)
 		});
 	}
 
