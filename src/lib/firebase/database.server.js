@@ -37,12 +37,17 @@ export async function addBook(data, userId) {
 
 /**
  * @param {string} bookId
+ * @param {string|undefined|null} userId
  */
-export async function getBook(bookId) {
+export async function getBook(bookId, userId = null) {
 	const book = await db.collection('books').doc(bookId).get();
 
 	if (book.exists) {
-		return { id: book.id, ...book.data() };
+		const user = userId ? await getUser(userId) : null;
+
+		const likedBook = user?.bookIds?.includes(bookId) || false;
+
+		return { id: book.id, ...book.data(), liked: likedBook };
 	}
 
 	return null;
@@ -114,3 +119,12 @@ export async function toggleLike(bookId, userId) {
 
 	return await getBook(bookId);
 }
+
+/**
+ *
+ * @param {string} userId
+ */
+export const getUser = async (userId) => {
+	const user = await db.collection('users').doc(userId).get();
+	return user?.data();
+};

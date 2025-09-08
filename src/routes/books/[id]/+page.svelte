@@ -1,5 +1,7 @@
 <script>
 	// @ts-nocheck
+	import Like from '../../../components/Book/Like.svelte';
+
 	const { data } = $props();
 </script>
 
@@ -28,8 +30,9 @@
 	</div>
 </div>
 
-<div>
+<div class="d-flex align-items-center justify-content-center gap-3 flex-column">
 	<a class="btn btn-primary" href={`/books/${data.book.id}/edit`}>Edit</a>
+	<Like book={data.book} />
 </div>
 
 <style>
