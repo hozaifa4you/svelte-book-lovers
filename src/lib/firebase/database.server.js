@@ -117,7 +117,7 @@ export async function toggleLike(bookId, userId) {
 		});
 	}
 
-	return await getBook(bookId);
+	return await getBook(bookId, userId);
 }
 
 /**
