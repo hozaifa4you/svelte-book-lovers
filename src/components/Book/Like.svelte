@@ -14,9 +14,9 @@
 				}
 			});
 			const data = await response.json();
-			book = data;
+			book = data; // Update the book with the new data from server
 		} catch (error) {
-			messageStore.showError();
+			messageStore.showError('Failed to toggle like');
 		} finally {
 			loading = false;
 		}

@@ -99,7 +99,7 @@ export async function toggleLike(bookId, userId) {
 	const user = await userDoc.get();
 	const userData = user.data();
 
-	if (userData?.bookIds && userData.booIds?.include(bookId)) {
+	if (userData?.bookIds && userData.bookIds?.includes(bookId)) {
 		await userDoc.update({
 			bookIds: admin.firestore.FieldValue.arrayRemove(bookId)
 		});
