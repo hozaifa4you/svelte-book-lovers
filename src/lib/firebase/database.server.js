@@ -128,3 +128,17 @@ export const getUser = async (userId) => {
 	const user = await db.collection('users').doc(userId).get();
 	return user?.data();
 };
+
+/**
+ * @param {string|null} userId
+ */
+export const getBooks = async (userId = null) => {
+	const user = userId ? await getUser(userId) : null;
+
+	const books = await db.collection('books').limit(5).orderBy('created_at', 'desc').get();
+	return books.docs.map((doc) => {
+		const bookData = doc.data();
+		const likedBook = user?.bookIds?.includes(doc.id) || false;
+		return { id: doc.id, ...bookData, liked: likedBook };
+	});
+};
