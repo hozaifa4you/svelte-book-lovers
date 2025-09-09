@@ -2,6 +2,8 @@ import admin from 'firebase-admin';
 import { db } from './firebase.server';
 import { saveFileToBucket } from './firestorage.server';
 
+const pageSize = 3;
+
 /**
  * @param {any} data
  * @param {string} userId
@@ -131,14 +133,28 @@ export const getUser = async (userId) => {
 
 /**
  * @param {string|null} userId
+ * @param {number} page
  */
-export const getBooks = async (userId = null) => {
+export const getBooks = async (userId = null, page = 1) => {
 	const user = userId ? await getUser(userId) : null;
 
-	const books = await db.collection('books').limit(5).orderBy('created_at', 'desc').get();
-	return books.docs.map((doc) => {
+	const bookCount = await db.collection('books').count().get();
+	const totalBooks = bookCount.data().count;
+	const hasNext = totalBooks > page * pageSize;
+	const hasPrev = page > 1;
+
+	const books = await db
+		.collection('books')
+		.limit(pageSize)
+		.offset((page - 1) * pageSize)
+		.orderBy('created_at', 'desc')
+		.get();
+
+	const booksWithLike = books.docs.map((doc) => {
 		const bookData = doc.data();
 		const likedBook = user?.bookIds?.includes(doc.id) || false;
 		return { id: doc.id, ...bookData, liked: likedBook };
 	});
+
+	return { books: booksWithLike, hasNext: hasNext, hasPrev: hasPrev };
 };

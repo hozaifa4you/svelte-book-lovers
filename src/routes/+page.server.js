@@ -1,7 +1,9 @@
 import { getBooks } from '$lib/firebase/database.server';
 
-export async function load({ locals }) {
-	const books = await getBooks(locals.user?.id);
+export async function load({ locals, url }) {
+	const page = url.searchParams.get('page') ?? 1;
 
-	return { books };
+	const { books, hasNext, hasPrev } = await getBooks(locals.user?.id, +page);
+
+	return { books, hasNext, hasPrev, page };
 }
