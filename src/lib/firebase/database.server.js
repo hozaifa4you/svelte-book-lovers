@@ -158,3 +158,23 @@ export const getBooks = async (userId = null, page = 1) => {
 
 	return { books: booksWithLike, hasNext: hasNext, hasPrev: hasPrev };
 };
+
+/**
+ *
+ * @param {string} userId
+ */
+export async function getMyBooks(userId) {
+	const user = await getUser(userId);
+
+	const books = await db
+		.collection('books')
+		.orderBy('created_at', 'desc')
+		.where('user_id', '==', userId)
+		.get();
+
+	return books.docs.map((doc) => {
+		const likedBook = user?.bookIds?.includes(doc.id) || false;
+
+		return { id: doc.id, ...doc.data(), liked: likedBook };
+	});
+}
