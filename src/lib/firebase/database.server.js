@@ -178,3 +178,28 @@ export async function getMyBooks(userId) {
 		return { id: doc.id, ...doc.data(), liked: likedBook };
 	});
 }
+
+/**
+ * @param {string} userId
+ */
+export async function getFavoriteBooks(userId) {
+	const user = await getUser(userId);
+
+	const bookIds = user?.bookIds ?? [];
+	if (bookIds.length === 0) {
+		return [];
+	}
+
+	const books = await db
+		.collection('books')
+		.where(admin.firestore.FieldPath.documentId(), 'in', bookIds)
+		.get();
+
+	return books.docs.map((doc) => {
+		return {
+			id: doc.id,
+			...doc.data(),
+			liked: true
+		};
+	});
+}

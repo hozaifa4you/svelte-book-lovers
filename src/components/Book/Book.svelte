@@ -28,7 +28,7 @@
 <div class="d-flex align-items-center justify-content-center gap-3 flex-column">
 	<a class="btn btn-info" href={`/books/${book.id}`}>View</a>
 	<a class="btn btn-primary" href={`/books/${book.id}/edit`}>Edit</a>
-	<Like {book} />
+	<Like {book} on:toggle_like />
 </div>
 
 <style>

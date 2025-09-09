@@ -1,5 +1,7 @@
 <script>
 	import messageStore from '../../storage/message.store';
+	import { createEventDispatcher } from 'svelte';
+	const dispatch = createEventDispatcher();
 
 	let { book } = $props();
 	let loading = $state(false);
@@ -14,7 +16,9 @@
 				}
 			});
 			const data = await response.json();
-			book = data; // Update the book with the new data from server
+			book = data;
+
+			dispatch('toggle_like', { id: book.id });
 		} catch (error) {
 			messageStore.showError('Failed to toggle like');
 		} finally {

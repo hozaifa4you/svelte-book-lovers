@@ -4,6 +4,10 @@
 	const { data } = $props();
 </script>
 
-{#each data.books as book (book.id)}
-	<Book {book} />
-{/each}
+<div class="row">
+	{#each data.books as book (book.id)}
+		<div class="col-md-3 mb-4">
+			<Book {book} />
+		</div>
+	{/each}
+</div>
